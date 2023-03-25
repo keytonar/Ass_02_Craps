@@ -1,55 +1,83 @@
 import java.util.Random;
 import java.util.Scanner;
 
-public class Main {
-    private static final int WINNING_SCORE = 7;
-    private static final int LOSING_SCORE = 2;
+public class Main
+{
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
 
-        int point = 0;
-        int score = 0;
-        boolean isPlaying = true;
-
-        while (isPlaying) {
+        while (true)
+        {
             System.out.println("Press enter to roll the dice...");
             scanner.nextLine();
 
             int dice1 = random.nextInt(6) + 1;
             int dice2 = random.nextInt(6) + 1;
-            int total = dice1 + dice2;
+            int sum = dice1 + dice2;
 
-            System.out.printf("You rolled %d + %d = %d\n", dice1, dice2, total);
+            System.out.println("You rolled: " + dice1 + " + " + dice2 + " = " + sum);
 
-            if (point == 0) {
-                switch (total) {
-                    case 7:
-                    case 11:
-                        System.out.println("You win!");
-                        isPlaying = false;
-                        break;
-                    case 2:
-                    case 3:
-                    case 12:
-                        System.out.println("You lose!");
-                        isPlaying = false;
-                        break;
-                    default:
-                        point = total;
-                        System.out.printf("Your point is %d\n", point);
-                        break;
+            if (sum == 2 || sum == 3 || sum == 12)
+            {
+                System.out.println("Craps! You lose.");
+                if (!playAgain(scanner))
+                {
+                    break;
                 }
-            } else {
-                if (total == point) {
-                    System.out.println("You win!");
-                    isPlaying = false;
-                } else if (total == LOSING_SCORE) {
-                    System.out.println("You lose!");
-                    isPlaying = false;
+            } else if (sum == 7 || sum == 11)
+            {
+                System.out.println("Natural! You win.");
+                if (!playAgain(scanner))
+                {
+                    break;
+                }
+            }
+            else
+            {
+                int point = sum;
+                System.out.println("Point is " + point);
+                while (true)
+                {
+                    System.out.println("Press enter to roll the dice...");
+                    scanner.nextLine();
+
+                    dice1 = random.nextInt(6) + 1;
+                    dice2 = random.nextInt(6) + 1;
+                    sum = dice1 + dice2;
+
+                    System.out.println("You rolled: " + dice1 + " + " + dice2 + " = " + sum);
+
+                    if (sum == point)
+                    {
+                        System.out.println("You made the point! You win.");
+                        if (!playAgain(scanner))
+                        {
+                            break;
+                        }
+                    }
+                    else if (sum == 7) {
+                        System.out.println("Seven! You lose.");
+                        if (!playAgain(scanner))
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("Trying for point...");
+                    }
                 }
             }
         }
+    }
+
+    private static boolean playAgain(Scanner scanner)
+    {
+        System.out.println("Do you want to play again? (Y/N)");
+        String input = scanner.nextLine().toUpperCase();
+        return input.equals("Y");
     }
 }
